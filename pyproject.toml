@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "veecert-backend"
+version = "0.1.0"
+description = ""
+authors = ["Ezekiel Victor <codeepoch@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+strawberry-graphql = {extras = ["fastapi"], version = "^0.235.0"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.30"}
+asyncpg = "^0.29.0"
+pydantic-settings = "^2.3.1"
+alembic = "^1.13.1"
+python-decouple = "^3.8"
+pinatapy-vourhey = "^0.2.0"
+bcrypt = "^4.1.3"
+pyjwt = {extras = ["crypto"], version = "^2.8.0"}
+algorand-python = "^1.1.4"
+algokit-utils = "^2.3.0"
+qrcode = {extras = ["pil"], version = "^7.4.2"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
