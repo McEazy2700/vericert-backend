@@ -67,8 +67,9 @@ class UserMutation:
         user = await info.context.user
         if user is None:
             raise GraphQLError("You must be authenticated to perform this action")
-        package = await Package.manager.one(args.package_id)
+        package = await Package.manager.one(int(args.package_id))
         if package.price > 0:
+            assert args.txn_in, GraphQLError("txn_id is requred")
             txn_info = Contract.get_transaction_info(args.txn_in)
             assert (
                 txn_info.txn.txn.note == f"Purchase Veecert Package {package.id}"
@@ -76,7 +77,7 @@ class UserMutation:
             assert txn_info.txn.txn.amt >= package.price, GraphQLError(
                 f"Insufficient amount for Package {package.name}"
             )
-        client_package = await ClientPackage.manager.new(args.package_id, user.id)
+        client_package = await ClientPackage.manager.new(int(args.package_id), user.id)
         return ClientPackageType.from_model(client_package)
 
     @strawberry.mutation

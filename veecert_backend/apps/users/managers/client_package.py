@@ -38,7 +38,7 @@ class ClientPackageManager:
             private_key = secrets.token_hex(32)
             client_package = ClientPackage(
                 api_public_key=public_key,
-                api_secret_key_hash=private_key,
+                api_secret_key=private_key,
                 client=client,
                 package=package,
             )

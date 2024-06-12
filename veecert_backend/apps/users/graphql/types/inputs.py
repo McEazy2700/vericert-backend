@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import strawberry
 
 from veecert_backend.apps.common.graphql.scalars import BigInt
@@ -20,7 +20,7 @@ class EmailPasswordSignInInput:
 @strawberry.input
 class PurchasePackageInput:
     package_id: BigInt
-    txn_in: str
+    txn_in: Optional[str] = None
 
 
 @strawberry.input
