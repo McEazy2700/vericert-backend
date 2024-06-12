@@ -70,7 +70,7 @@ class DocumentManager:
 
         async with async_db_session() as session:
             client = await Client.manager.one(client_id)
-            keyvalues = {"client_name": client.name, "client_id": client.id}
+            keyvalues = {"client_id": client.id}
             metadata = PinataMetadata(name=args.name, keyvalues=keyvalues)
             asset = await IPFSAsset.manager.new(args.file, metadata, client_id)
             document = Document(
