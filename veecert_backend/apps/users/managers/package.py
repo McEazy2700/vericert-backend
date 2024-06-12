@@ -18,10 +18,10 @@ class PackageManager:
         async with async_db_session() as session:
             package = Package(
                 name=args.name,
-                price=args.price,
-                storage_capacity=args.storage_capacity,
+                price=int(args.price),
+                storage_capacity=int(args.storage_capacity),
                 offers=args.offers,
-                monthly_requests=args.monthly_requests,
+                monthly_requests=int(args.monthly_requests),
             )
             session.add(package)
             await session.commit()
