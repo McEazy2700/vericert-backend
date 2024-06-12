@@ -46,6 +46,8 @@ class Context(BaseContext):
         authorization = self.request.headers.get("Authorization")
         if not authorization:
             return None
+        if authorization == "":
+            return None
         parts = authorization.split(" ")
         if parts[0] != "Bearer" or len(parts) != 2:
             raise GraphQLError("Invalid Auth Token")

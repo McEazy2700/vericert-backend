@@ -61,14 +61,14 @@ class Document(Base):
         default=DocumentVisibility.PUBLIC
     )
     authorised_email: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
-    nft_ipfs_asset_id: Mapped[int] = mapped_column(
-        ForeignKey(f"{TableNames.IPFS_ASSET}.id")
+    nft_ipfs_asset_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey(f"{TableNames.IPFS_ASSET}.id"), nullable=True
     )
     ipfs_asset_id: Mapped[int] = mapped_column(
         ForeignKey(f"{TableNames.IPFS_ASSET}.id")
     )
 
-    nft_ipfs_asset: Mapped[IPFSAsset] = relationship(
+    nft_ipfs_asset: Mapped[Optional[IPFSAsset]] = relationship(
         back_populates="nft_document", foreign_keys=[nft_ipfs_asset_id], uselist=False
     )
     ipfs_asset: Mapped[IPFSAsset] = relationship(
