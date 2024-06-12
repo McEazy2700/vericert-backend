@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import List, Optional
 import uuid
 from sqlalchemy import JSON, UUID, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
@@ -9,10 +9,6 @@ from .managers.user import UserManager
 from .managers.client_package import ClientPackageManager
 from .managers.auth_token import AuthTokenManager
 from .managers.package import PackageManager
-
-
-if TYPE_CHECKING:
-    from veecert_backend.apps.assets.models import IPFSAsset
 
 
 class User(Base):
@@ -101,3 +97,6 @@ class AuthToken(Base):
     )
 
     manager = AuthTokenManager
+
+
+from veecert_backend.apps.assets.models import IPFSAsset

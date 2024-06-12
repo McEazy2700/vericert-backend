@@ -44,11 +44,6 @@ class IPFSAsset(Base):
     client: Mapped[Optional["Client"]] = relationship(
         back_populates="ipfs_assets", foreign_keys=[client_id]
     )
-    document: Mapped[Optional["Document"]] = relationship(back_populates="ipfs_asset")
-    nft_document: Mapped[Optional["Document"]] = relationship(
-        back_populates="nft_ipfs_asset"
-    )
-
     manager = IPFSAssetManager
 
 
@@ -69,10 +64,10 @@ class Document(Base):
     )
 
     nft_ipfs_asset: Mapped[Optional[IPFSAsset]] = relationship(
-        back_populates="nft_document", foreign_keys=[nft_ipfs_asset_id], uselist=False
+        foreign_keys=[nft_ipfs_asset_id], uselist=False
     )
     ipfs_asset: Mapped[IPFSAsset] = relationship(
-        back_populates="document", foreign_keys=[ipfs_asset_id], uselist=False
+        foreign_keys=[ipfs_asset_id], uselist=False
     )
 
     manager = DocumentManager
