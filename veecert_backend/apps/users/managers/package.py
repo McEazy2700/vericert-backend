@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 from graphql import GraphQLError
 from sqlalchemy import select
@@ -11,6 +11,14 @@ if TYPE_CHECKING:
 
 
 class PackageManager:
+    @classmethod
+    async def all(cls) -> Sequence["Package"]:
+        from ..models import Package
+
+        async with async_db_session() as session:
+            result = await session.execute(select(Package))
+            return result.scalars().all()
+
     @classmethod
     async def new(cls, args: "NewPackageInput") -> "Package":
         from ..models import Package

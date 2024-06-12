@@ -3,6 +3,7 @@ import strawberry
 from veecert_backend.apps.assets.graphql.mutations import AssetMutations
 from veecert_backend.apps.assets.graphql.query import AssetQueries
 from veecert_backend.apps.users.graphql.mutations import UserMutation
+from veecert_backend.apps.users.graphql.quereis import UserQueries
 
 
 @strawberry.type
@@ -13,7 +14,7 @@ class VersionQuery:
 
 
 @strawberry.type
-class Query(VersionQuery, AssetQueries):
+class Query(VersionQuery, AssetQueries, UserQueries):
     pass
 
 
