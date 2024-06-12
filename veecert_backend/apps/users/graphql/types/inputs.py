@@ -12,6 +12,12 @@ class EmailPasswordSignUpInput:
 
 
 @strawberry.input
+class EmailPasswordSignInInput:
+    email: str
+    passowrd: str
+
+
+@strawberry.input
 class PurchasePackageInput:
     package_id: BigInt
     txn_in: str

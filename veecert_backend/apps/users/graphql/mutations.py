@@ -1,3 +1,4 @@
+import bcrypt
 from typing import Optional
 from graphql import GraphQLError
 import strawberry
@@ -5,6 +6,7 @@ import strawberry
 from veecert_backend.config.settings import settings
 from veecert_backend.apps.common.contract import Contract
 from veecert_backend.apps.users.graphql.types.inputs import (
+    EmailPasswordSignInInput,
     EmailPasswordSignUpInput,
     NewPackageInput,
     PurchasePackageInput,
@@ -39,6 +41,20 @@ class UserMutation:
         from ..models import User, AuthToken
 
         user = await User.manager.new_from_email_password(args)
+        token = await AuthToken.manager.new(user.email)
+        return AuthTokenType.from_model(token)
+
+    @strawberry.mutation
+    async def email_password_signin(
+        self, args: EmailPasswordSignInInput
+    ) -> AuthTokenType:
+        from ..models import User, AuthToken
+
+        user = await User.manager.one_by_email(args.email)
+        if user.password_hash is None:
+            raise GraphQLError("Password Login not found.")
+        if not bcrypt.checkpw(args.passowrd.encode(), user.password_hash.encode()):
+            raise GraphQLError("Incorrect email or passowrd")
         token = await AuthToken.manager.new(user.email)
         return AuthTokenType.from_model(token)
 
