@@ -101,6 +101,14 @@ class ClientType:
         user = await User.manager.one_by_id(self.user_id)
         return UserType.from_model(user)
 
+    @strawberry.field
+    async def client_package(self) -> Optional["ClientPackageType"]:
+        from ...models import ClientPackage
+
+        package = await ClientPackage.manager.get_by_client_id(self.id)
+        if package:
+            return ClientPackageType.from_model(package)
+
     @classmethod
     def from_model(cls, model: "Client") -> Self:
         return cls(

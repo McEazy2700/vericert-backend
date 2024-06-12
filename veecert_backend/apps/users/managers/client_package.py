@@ -1,5 +1,5 @@
 import secrets
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from graphql import GraphQLError
 from sqlalchemy import delete, select
@@ -11,6 +11,16 @@ if TYPE_CHECKING:
 
 
 class ClientPackageManager:
+    @classmethod
+    async def get_by_client_id(cls, client_id: int) -> Optional["ClientPackage"]:
+        from ..models import ClientPackage
+
+        async with async_db_session() as session:
+            result = await session.execute(
+                select(ClientPackage).where(ClientPackage.client_id == client_id)
+            )
+            return result.scalar_one_or_none()
+
     @classmethod
     async def new(cls, package_id: int, user_id: int) -> "ClientPackage":
         from ..models import Package, Client, ClientPackage
