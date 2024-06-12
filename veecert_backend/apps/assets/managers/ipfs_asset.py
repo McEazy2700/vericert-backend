@@ -17,7 +17,9 @@ class IPFSAssetManager:
         from ..models import IPFSAsset
 
         async with async_db_session() as session:
-            result = await session.execute(select(IPFSAsset).where(IPFSAsset.id==ipfs_asset_id))
+            result = await session.execute(
+                select(IPFSAsset).where(IPFSAsset.id == ipfs_asset_id)
+            )
             return result.scalar_one_or_none()
 
     @classmethod
@@ -36,19 +38,21 @@ class IPFSAssetManager:
     ) -> "IPFSAsset":
         from ..utils import Pinata
         from ..models import IPFSAsset
-        from veecert_backend.apps.users.models import Client
+        from veecert_backend.apps.users.models import Client, ClientPackage, Package
 
         async with async_db_session() as session:
             client: Optional[Client] = None
             upload_file = cast(UploadFile, file)
 
             if client_id:
+                client_package = await ClientPackage.manager.one_by_client_id(client_id)
+                package = await Package.manager.one(client_package.package_id)
                 client = await Client.manager.one(client_id)
                 if (
                     (upload_file.size or 0) + client.used_storage
-                ) > client.client_package.package.storage_capacity:
+                ) > package.storage_capacity:
                     raise GraphQLError(
-                        f"Insufficient storage on {client.client_package.package.name} tier! Consider an Upgrade."
+                        f"Insufficient storage on {package.name} tier! Consider an Upgrade."
                     )
 
             res = await Pinata.pin_file_to_ipfs(file, metadata)
@@ -58,7 +62,7 @@ class IPFSAssetManager:
                 pin_size=res.PinSize,
                 timestamp=res.Timestamp,
                 is_duplicate=res.isDuplicate,
-                client=client
+                client=client,
             )
             if client is not None:
                 client.used_storage += res.PinSize

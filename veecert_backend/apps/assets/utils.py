@@ -39,14 +39,14 @@ class Pinata:
             "pinata_secret_api_key": settings.pinyata_api_secret,
             # "Authorization": f"Bearer {settings.pinyata_jwt}"
         }
-        print(headers)
         file_content = await file.read()  # type: ignore
         file_upload = cast(UploadFile, file)
+        print(file_upload)
         files: Dict[str, Upload | Tuple[Any, Any, str]] = {
             "file": (
                 str(file_upload.filename),
                 file_content,
-                file_upload.headers["content-type"],
+                file_upload.content_type or "",
             ),
         }
         if metadata is None:
@@ -63,7 +63,7 @@ class Pinata:
         response = requests.post(
             f"{PINATA_API_ENDPOINT}/pinning/pinFileToIPFS", headers=headers, files=files
         )
-        print(response.reason)
+        print(response.status_code)
         if response.status_code == 200:
             response_data = response.json()
             return PinataResponse.model_validate(response_data)

@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import TYPE_CHECKING, List, Optional, Self
 import strawberry
 
@@ -14,7 +13,7 @@ class IPFSAssetType:
     id: BigInt
     ipfs_hash: str
     pin_size: BigInt
-    timestamp: datetime
+    timestamp: str
     is_duplicate: bool
     client_id: strawberry.Private[Optional[BigInt]] = None
 
@@ -25,15 +24,6 @@ class IPFSAssetType:
         if self.client_id:
             client = await Client.manager.one(self.client_id)
             return ClientType.from_model(client)
-        return None
-
-    @strawberry.field
-    async def document(self) -> Optional["DocumentType"]:
-        from ...models import IPFSAsset
-
-        asset = await IPFSAsset.manager.one(self.id)
-        if asset.document is not None:
-            return DocumentType.from_model(asset.document)
         return None
 
     @classmethod

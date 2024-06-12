@@ -34,8 +34,8 @@ class IPFSAsset(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     ipfs_hash: Mapped[str] = mapped_column(unique=True)
     pin_size: Mapped[int] = mapped_column(BigInteger)
-    timestamp: Mapped[datetime]
-    is_duplicate: Mapped[bool]
+    timestamp: Mapped[str]
+    is_duplicate: Mapped[bool] = mapped_column(nullable=True)
     extension: Mapped[Optional[str]] = mapped_column(nullable=True)
     client_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey(f"{TableNames.CLIENT}.id"), nullable=True
@@ -51,7 +51,7 @@ class Document(Base):
     __tablename__ = TableNames.DOCUMENT
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     name: Mapped[str]
-    asset_id: Mapped[int] = mapped_column(BigInteger)
+    asset_id: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
     visibility: Mapped[DocumentVisibility] = mapped_column(
         default=DocumentVisibility.PUBLIC
     )

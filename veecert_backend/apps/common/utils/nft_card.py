@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
+from fastapi import UploadFile
 from qrcode.main import QRCode
 import requests
 from PIL import Image, ImageDraw, ImageFont
@@ -8,6 +9,7 @@ import os
 from io import BytesIO
 
 from strawberry.file_uploads import Upload
+
 
 from veecert_backend.constants.urls import Urls
 
@@ -98,6 +100,5 @@ async def generate_nft_image(
     # Save the image
     image.save(bytes_io, "png")
     bytes_io.seek(0)
-    file = Upload(bytes_io.read())
-    asset = await IPFSAsset.manager.new(file)
+    asset = await IPFSAsset.manager.new(cast(Upload, UploadFile(file=bytes_io)))
     return asset

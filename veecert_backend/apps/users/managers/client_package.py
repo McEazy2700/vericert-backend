@@ -22,6 +22,19 @@ class ClientPackageManager:
             return result.scalar_one_or_none()
 
     @classmethod
+    async def one_by_client_id(cls, client_id: int) -> "ClientPackage":
+        from ..models import ClientPackage
+
+        async with async_db_session() as session:
+            result = await session.execute(
+                select(ClientPackage).where(ClientPackage.client_id == client_id)
+            )
+            client_package = result.scalar_one_or_none()
+            if client_package is None:
+                raise GraphQLError("ClientPackage not found")
+            return client_package
+
+    @classmethod
     async def new(cls, package_id: int, user_id: int) -> "ClientPackage":
         from ..models import Package, Client, ClientPackage
 
