@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     secret_key: str = Field(default="")
     algod_server: str = Field(default="")
     indexer_server: str = Field(default="")
+    deployer_mnemonic: str = Field(default="")
+    super_secret_phrase: str = Field(default="")
+    frontend_base_url: str = Field(default="")
+    smart_contract_application_id: int = Field(default=0)
 
 
 settings = Settings()

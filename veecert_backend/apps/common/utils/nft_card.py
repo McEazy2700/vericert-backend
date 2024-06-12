@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 from qrcode.main import QRCode
 import requests
@@ -16,7 +17,9 @@ if TYPE_CHECKING:
 QRCODE_LOGO_WIDTH = 40
 
 
-async def generate_nft_image() -> "IPFSAsset":
+async def generate_nft_image(
+    id: int, name: str, unit_name: str, url: str
+) -> "IPFSAsset":
     from veecert_backend.apps.assets.models import IPFSAsset
 
     font_url = "https://github.com/google/fonts/blob/main/apache/roboto/Roboto-Bold.ttf?raw=true"
@@ -52,10 +55,10 @@ async def generate_nft_image() -> "IPFSAsset":
 
     # Texts and positions
     texts = [
-        ("Private Doc", (50, 50), large_font),
-        ("VEC-PRM", (50, 200), medium_font),
-        ("#00192", (50, 270), medium_font),
-        ("2024-06-09", (1000, 50), small_font),
+        (name, (50, 50), large_font),
+        (unit_name, (50, 200), medium_font),
+        (f"#{id}", (50, 270), medium_font),
+        (datetime.now(tz=timezone.utc).strftime("%Y-%m-%d"), (1000, 50), small_font),
     ]
 
     # Draw texts
@@ -75,7 +78,7 @@ async def generate_nft_image() -> "IPFSAsset":
         box_size=10,
         border=4,
     )
-    qr.add_data("https://www.example.com")
+    qr.add_data(url)
     qr.make(fit=True)
 
     qr_img = qr.make_image(fill_color="black", back_color="white")

@@ -6,10 +6,28 @@ from veecert_backend.config.database import async_db_session
 
 
 if TYPE_CHECKING:
+    from ..graphql.types.inputs import NewPackageInput
     from ..models import Package
 
 
 class PackageManager:
+    @classmethod
+    async def new(cls, args: "NewPackageInput") -> "Package":
+        from ..models import Package
+
+        async with async_db_session() as session:
+            package = Package(
+                name=args.name,
+                price=args.price,
+                storage_capacity=args.storage_capacity,
+                offers=args.offers,
+                monthly_requests=args.monthly_requests,
+            )
+            session.add(package)
+            await session.commit()
+            await session.refresh(package)
+            return package
+
     @classmethod
     async def one(cls, package_id: int) -> "Package":
         from ..models import Package

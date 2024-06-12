@@ -1,20 +1,37 @@
+from typing import Optional
 from graphql import GraphQLError
 import strawberry
 
+from veecert_backend.config.settings import settings
 from veecert_backend.apps.common.contract import Contract
 from veecert_backend.apps.users.graphql.types.inputs import (
     EmailPasswordSignUpInput,
+    NewPackageInput,
     PurchasePackageInput,
 )
 from veecert_backend.apps.users.graphql.types.outputs import (
     AuthTokenType,
     ClientPackageType,
+    PackageType,
 )
 from veecert_backend.config.context import Context
 
 
 @strawberry.type
 class UserMutation:
+    @strawberry.mutation
+    async def new_package(
+        self, args: NewPackageInput, super_secret_phrase: Optional[str] = None
+    ) -> PackageType:
+        from ..models import Package
+
+        if super_secret_phrase is None or (
+            super_secret_phrase != settings.super_secret_phrase
+        ):
+            raise GraphQLError("Failed to perform operation")
+        package = await Package.manager.new(args)
+        return PackageType.from_model(package)
+
     @strawberry.mutation
     async def email_password_signup(
         self, args: EmailPasswordSignUpInput

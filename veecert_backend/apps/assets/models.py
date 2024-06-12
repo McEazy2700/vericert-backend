@@ -45,6 +45,9 @@ class IPFSAsset(Base):
         back_populates="ipfs_assets", foreign_keys=[client_id]
     )
     document: Mapped[Optional["Document"]] = relationship(back_populates="ipfs_asset")
+    nft_document: Mapped[Optional["Document"]] = relationship(
+        back_populates="nft_ipfs_asset"
+    )
 
     manager = IPFSAssetManager
 
@@ -58,10 +61,16 @@ class Document(Base):
         default=DocumentVisibility.PUBLIC
     )
     authorised_email: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
+    nft_ipfs_asset_id: Mapped[int] = mapped_column(
+        ForeignKey(f"{TableNames.IPFS_ASSET}.id")
+    )
     ipfs_asset_id: Mapped[int] = mapped_column(
         ForeignKey(f"{TableNames.IPFS_ASSET}.id")
     )
 
+    nft_ipfs_asset: Mapped[IPFSAsset] = relationship(
+        back_populates="nft_document", foreign_keys=[nft_ipfs_asset_id], uselist=False
+    )
     ipfs_asset: Mapped[IPFSAsset] = relationship(
         back_populates="document", foreign_keys=[ipfs_asset_id], uselist=False
     )

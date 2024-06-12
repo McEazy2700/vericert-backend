@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List, Optional
 import uuid
-from sqlalchemy import UUID, BigInteger, ForeignKey
+from sqlalchemy import JSON, UUID, BigInteger, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from veecert_backend.config.database import Base
 from veecert_backend.constants.table_names import TableNames
@@ -41,6 +41,7 @@ class Package(Base):
     storage_capacity: Mapped[int] = mapped_column(
         BigInteger, comment="Storage capacity in KB"
     )
+    offers: Mapped[List[str]] = mapped_column(JSON, default=[])
     monthly_requests: Mapped[int] = mapped_column(BigInteger)
     client_packages: Mapped[List["ClientPackage"]] = relationship(
         back_populates="package"
@@ -54,6 +55,7 @@ class ClientPackage(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     client_id: Mapped[int] = mapped_column(ForeignKey(f"{TableNames.CLIENT}.id"))
     package_id: Mapped[int] = mapped_column(ForeignKey(f"{TableNames.PACKAGE}.id"))
+    txn_id: Mapped[Optional[str]] = mapped_column(nullable=True)
     api_public_key: Mapped[str] = mapped_column(unique=True, index=True)
     api_secret_key: Mapped[str] = mapped_column(unique=True)
     has_pending_payment: Mapped[bool] = mapped_column(default=False)

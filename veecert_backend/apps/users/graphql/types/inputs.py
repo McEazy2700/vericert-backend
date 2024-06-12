@@ -1,3 +1,4 @@
+from typing import List
 import strawberry
 
 from veecert_backend.apps.common.graphql.scalars import BigInt
@@ -14,3 +15,12 @@ class EmailPasswordSignUpInput:
 class PurchasePackageInput:
     package_id: BigInt
     txn_in: str
+
+
+@strawberry.input
+class NewPackageInput:
+    name: str
+    price: BigInt
+    storage_capacity: BigInt
+    offers: List[str]
+    monthly_requests: BigInt
