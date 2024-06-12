@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Literal, Tuple, Union
+from typing import TYPE_CHECKING, Literal, Optional, Tuple, Union
 
 from graphql import GraphQLError
 from sqlalchemy import Select, select
@@ -16,6 +16,14 @@ class ClientManager:
 
         stmt = select(Client).where(Client.id == client_id)
         return await cls.__exec_one_select_stmt__(stmt, "id", client_id)
+
+    @classmethod
+    async def get_by_user_id(cls, user_id: int) -> Optional["Client"]:
+        from ..models import Client
+
+        stmt = select(Client).where(Client.user_id == user_id)
+        async with async_db_session() as session:
+            return (await session.execute(stmt)).scalar_one_or_none()
 
     @classmethod
     async def one_by_user_id(cls, user_id: int) -> "Client":

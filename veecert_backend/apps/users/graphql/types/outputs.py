@@ -89,7 +89,6 @@ class AuthTokenType:
 @strawberry.type
 class ClientType:
     id: int
-    name: str
     image_url: Optional[str] = None
     used_storage: int
     user_id: strawberry.Private[int]
@@ -113,7 +112,6 @@ class ClientType:
     def from_model(cls, model: "Client") -> Self:
         return cls(
             id=model.id,
-            name=model.name,
             image_url=model.image_url,
             used_storage=model.used_storage,
             user_id=model.user_id,

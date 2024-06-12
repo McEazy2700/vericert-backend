@@ -25,7 +25,9 @@ class ClientPackageManager:
     async def new(cls, package_id: int, user_id: int) -> "ClientPackage":
         from ..models import Package, Client, ClientPackage
 
-        client = await Client.manager.one_by_user_id(user_id)
+        client = await Client.manager.get_by_user_id(user_id)
+        if client is None:
+            client = Client(user_id=user_id)
         package = await Package.manager.one(package_id)
 
         async with async_db_session() as session:
@@ -40,7 +42,7 @@ class ClientPackageManager:
                 client=client,
                 package=package,
             )
-            session.add(client_package)
+            session.add_all([client_package, client])
             await session.commit()
             await session.refresh(client_package)
             return client_package

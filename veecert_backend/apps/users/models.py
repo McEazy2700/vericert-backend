@@ -69,7 +69,6 @@ class ClientPackage(Base):
 class Client(Base):
     __tablename__ = TableNames.CLIENT
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    name: Mapped[str]
     image_url: Mapped[Optional[str]] = mapped_column(nullable=True)
     used_storage: Mapped[int] = mapped_column(BigInteger, default=0)
     user_id: Mapped[int] = mapped_column(ForeignKey(f"{TableNames.USER}.id"))
