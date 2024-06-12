@@ -53,7 +53,7 @@ class UserMutation:
         user = await User.manager.one_by_email(args.email)
         if user.password_hash is None:
             raise GraphQLError("Password Login not found.")
-        if not bcrypt.checkpw(args.passowrd.encode(), user.password_hash.encode()):
+        if not bcrypt.checkpw(args.password.encode(), user.password_hash.encode()):
             raise GraphQLError("Incorrect email or passowrd")
         token = await AuthToken.manager.new(user.email)
         return AuthTokenType.from_model(token)

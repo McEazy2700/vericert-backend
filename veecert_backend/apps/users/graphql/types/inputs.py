@@ -14,7 +14,7 @@ class EmailPasswordSignUpInput:
 @strawberry.input
 class EmailPasswordSignInInput:
     email: str
-    passowrd: str
+    password: str
 
 
 @strawberry.input
